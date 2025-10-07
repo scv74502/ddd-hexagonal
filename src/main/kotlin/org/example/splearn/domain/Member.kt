@@ -1,12 +1,9 @@
 package org.example.splearn.domain
 
-import org.springframework.util.Assert
-import org.springframework.util.Assert.state
-
-class Member(
+class Member private constructor(
     val email: String,
-    val nickname: String,
-    val passwordHash: String,
+    var nickname: String,
+    var passwordHash: String,
     var status: MemberStatus,
 ) {
     fun activate() {
@@ -23,5 +20,34 @@ class Member(
         this.status = MemberStatus.DEACTIVATED
     }
 
-    constructor(email: String, nickname: String, passwordHash: String) : this(email, nickname, passwordHash, MemberStatus.PENDING)
+    fun verifyPassword(
+        password: String,
+        passwordEncoder: PasswordEncoder,
+    ): Boolean = passwordEncoder.matches(password, this.passwordHash)
+
+    fun changeNickname(nickname: String) {
+        this.nickname = nickname
+    }
+
+    fun changePassword(
+        password: String,
+        passwordEncoder: PasswordEncoder,
+    ) {
+        this.passwordHash = passwordEncoder.encode(password)
+    }
+
+    companion object {
+        fun create(
+            email: String,
+            nickname: String,
+            password: String,
+            passwordEncoder: PasswordEncoder,
+        ): Member =
+            Member(
+                email,
+                nickname,
+                passwordEncoder.encode(password),
+                MemberStatus.PENDING,
+            )
+    }
 }
