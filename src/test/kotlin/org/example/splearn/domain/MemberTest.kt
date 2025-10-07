@@ -23,11 +23,16 @@ class MemberTest {
                 ): Boolean = encode(password) == passwordHash
             }
 
-        member =
-            Member.create(
+        val memberCreateRequest =
+            MemberCreateRequest.of(
                 "woo@gs.com",
                 "woo",
                 "secret",
+            )
+
+        member =
+            Member.create(
+                memberCreateRequest,
                 passwordEncoder,
             )
     }

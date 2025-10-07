@@ -55,9 +55,7 @@ class Member private constructor(
 
     companion object {
         fun create(
-            email: String,
-            nickname: String,
-            password: String,
+            memberCreateRequest: MemberCreateRequest,
             passwordEncoder: PasswordEncoder,
         ): Member =
             Member(
