@@ -89,4 +89,11 @@ class MemberTest {
         member.changePassword("verySecret", passwordEncoder)
         assertThat(member.verifyPassword("verySecret", passwordEncoder)).isTrue()
     }
+
+    @Test
+    fun isActive() {
+        assertThat(member.isActive()).isFalse()
+        member.activate()
+        assertThat(member.isActive()).isTrue()
+    }
 }

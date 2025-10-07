@@ -36,6 +36,8 @@ class Member private constructor(
         this.passwordHash = passwordEncoder.encode(password)
     }
 
+    fun isActive(): Boolean = this.status == MemberStatus.ACTIVATE
+
     companion object {
         fun create(
             email: String,
@@ -48,6 +50,9 @@ class Member private constructor(
                 nickname,
                 passwordEncoder.encode(password),
                 MemberStatus.PENDING,
+                email = memberCreateRequest.email,
+                nickname = memberCreateRequest.nickname,
+                status = MemberStatus.PENDING,
             )
     }
 }
