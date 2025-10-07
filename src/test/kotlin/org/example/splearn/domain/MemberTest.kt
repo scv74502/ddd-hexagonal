@@ -2,25 +2,48 @@ package org.example.splearn.domain
 
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Locale.getDefault
 
 class MemberTest {
+    private lateinit var member: Member
+    private lateinit var passwordEncoder: PasswordEncoder
+
+    @BeforeEach
+    fun setUp() {
+        passwordEncoder =
+            object : PasswordEncoder {
+                override fun encode(password: String): String = password.uppercase(getDefault())
+
+                override fun matches(
+                    password: String,
+                    passwordHash: String,
+                ): Boolean = encode(password) == passwordHash
+            }
+
+        member =
+            Member.create(
+                "woo@gs.com",
+                "woo",
+                "secret",
+                passwordEncoder,
+            )
+    }
+
     @Test
     fun testMemberStatus() {
-        val member = Member("woo@gs.com", "Woo", "secret")
         Assertions.assertThat(member.status).isEqualTo(MemberStatus.PENDING)
     }
 
     @Test
     fun activate() {
-        val member = Member("woo@gs.com", "Woo", "secret")
         member.activate()
         Assertions.assertThat(member.status).isEqualTo(MemberStatus.ACTIVATE)
     }
 
     @Test
     fun activateFail() {
-        val member = Member("woo@gs.com", "Woo", "secret")
         member.activate()
 
         assertThatThrownBy {
@@ -30,8 +53,6 @@ class MemberTest {
 
     @Test
     fun deactivate() {
-        val member = Member("woo@gs.com", "Woo", "secret")
-
         member.activate()
         member.deactivate()
 
@@ -40,8 +61,6 @@ class MemberTest {
 
     @Test
     fun deactivateFail() {
-        val member = Member("woo@gs.com", "Woo", "secret")
-
         member.activate()
         member.deactivate()
 
