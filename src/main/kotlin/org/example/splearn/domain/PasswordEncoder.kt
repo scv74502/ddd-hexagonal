@@ -6,5 +6,5 @@ interface PasswordEncoder {
     fun matches(
         password: String,
         passwordHash: String,
-    ): String
+    ): Boolean
 }
