@@ -78,9 +78,9 @@ class MemberTest {
 
     @Test
     fun changeNickname() {
-        assertThat(member.nickname == "woo").isTrue
+        assertThat(member.nickname.value == "woo").isTrue
         member.changeNickname("Charlie")
-        assertThat(member.nickname == "Charlie").isTrue
+        assertThat(member.nickname.value == "Charlie").isTrue
     }
 
     @Test

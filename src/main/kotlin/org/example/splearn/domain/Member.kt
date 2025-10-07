@@ -1,9 +1,24 @@
 package org.example.splearn.domain
 
+@JvmInline
+value class Email(
+    val value: String,
+)
+
+@JvmInline
+value class Nickname(
+    val value: String,
+)
+
+@JvmInline
+value class PasswordHash(
+    val value: String,
+)
+
 class Member private constructor(
-    val email: String,
-    var nickname: String,
-    var passwordHash: String,
+    val email: Email,
+    var nickname: Nickname,
+    var passwordHash: PasswordHash,
     var status: MemberStatus,
 ) {
     fun activate() {
@@ -23,17 +38,17 @@ class Member private constructor(
     fun verifyPassword(
         password: String,
         passwordEncoder: PasswordEncoder,
-    ): Boolean = passwordEncoder.matches(password, this.passwordHash)
+    ): Boolean = passwordEncoder.matches(password, this.passwordHash.value)
 
     fun changeNickname(nickname: String) {
-        this.nickname = nickname
+        this.nickname = Nickname(nickname)
     }
 
     fun changePassword(
         password: String,
         passwordEncoder: PasswordEncoder,
     ) {
-        this.passwordHash = passwordEncoder.encode(password)
+        this.passwordHash = PasswordHash(passwordEncoder.encode(password))
     }
 
     fun isActive(): Boolean = this.status == MemberStatus.ACTIVATE
@@ -46,12 +61,12 @@ class Member private constructor(
             passwordEncoder: PasswordEncoder,
         ): Member =
             Member(
-                email,
-                nickname,
-                passwordEncoder.encode(password),
-                MemberStatus.PENDING,
                 email = memberCreateRequest.email,
                 nickname = memberCreateRequest.nickname,
+                passwordHash =
+                    PasswordHash(
+                        passwordEncoder.encode(memberCreateRequest.password.value),
+                    ),
                 status = MemberStatus.PENDING,
             )
     }
