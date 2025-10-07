@@ -1,6 +1,7 @@
 package org.example.splearn.domain
 
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -67,5 +68,25 @@ class MemberTest {
         assertThatThrownBy {
             member.deactivate()
         }.isInstanceOf(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun verifyPassword() {
+        assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue()
+        assertThat(member.verifyPassword("hello", passwordEncoder)).isFalse()
+    }
+
+    @Test
+    fun changeNickname() {
+        assertThat(member.nickname == "woo").isTrue
+        member.changeNickname("Charlie")
+        assertThat(member.nickname == "Charlie").isTrue
+    }
+
+    @Test
+    fun changePassword() {
+        assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue()
+        member.changePassword("verySecret", passwordEncoder)
+        assertThat(member.verifyPassword("verySecret", passwordEncoder)).isTrue()
     }
 }
