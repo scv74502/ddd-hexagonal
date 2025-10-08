@@ -3,6 +3,7 @@ package org.example.splearn.domain
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.ThrowableAssert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.Locale.getDefault
@@ -32,7 +33,9 @@ class MemberTest {
 
         member =
             Member.create(
-                memberCreateRequest,
+                Email(memberCreateRequest.email),
+                Nickname(memberCreateRequest.nickname),
+                memberCreateRequest.password,
                 passwordEncoder,
             )
     }
@@ -100,5 +103,28 @@ class MemberTest {
         assertThat(member.isActive()).isFalse()
         member.activate()
         assertThat(member.isActive()).isTrue()
+    }
+
+    @Test
+    fun invalidEmail() {
+        assertThatThrownBy {
+            Member.create(
+                Email("invalid email"),
+                Nickname("woo"),
+                "secret",
+                passwordEncoder,
+            )
+        }.isInstanceOf(IllegalArgumentException::class.java)
+
+        Member.create(Email("tobyilee@gmail.com"), Nickname("woo"), "secret", passwordEncoder)
+    }
+
+    @Test
+    fun emailEquality() {
+        "test@spleran.com"
+        val email1 = Email("test@spleran.com")
+        val email2 = Email("test@spleran.com")
+
+        assertThat(email1).isEqualTo(email2)
     }
 }

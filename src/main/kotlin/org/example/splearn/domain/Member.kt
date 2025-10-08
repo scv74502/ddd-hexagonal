@@ -3,7 +3,17 @@ package org.example.splearn.domain
 @JvmInline
 value class Email(
     val value: String,
-)
+) {
+    init {
+        require(EMAIL_REGEX.matches(value)) {
+            "유효하지 않은 이메일 형식입니다."
+        }
+    }
+
+    companion object {
+        private val EMAIL_REGEX = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    }
+}
 
 @JvmInline
 value class Nickname(
