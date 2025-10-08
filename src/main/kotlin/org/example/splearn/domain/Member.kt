@@ -55,15 +55,17 @@ class Member private constructor(
 
     companion object {
         fun create(
-            memberCreateRequest: MemberCreateRequest,
+            email: Email,
+            nickname: Nickname,
+            password: String,
             passwordEncoder: PasswordEncoder,
         ): Member =
             Member(
-                email = memberCreateRequest.email,
-                nickname = memberCreateRequest.nickname,
+                email = email,
+                nickname = nickname,
                 passwordHash =
                     PasswordHash(
-                        passwordEncoder.encode(memberCreateRequest.password.value),
+                        passwordEncoder.encode(password),
                     ),
                 status = MemberStatus.PENDING,
             )

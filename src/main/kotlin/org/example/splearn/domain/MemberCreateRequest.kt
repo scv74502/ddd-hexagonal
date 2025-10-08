@@ -1,9 +1,9 @@
 package org.example.splearn.domain
 
 data class MemberCreateRequest(
-    val email: Email,
-    val nickname: Nickname,
-    val password: PasswordHash,
+    val email: String,
+    val nickname: String,
+    val password: String,
 ) {
     companion object {
         fun of(
@@ -12,9 +12,9 @@ data class MemberCreateRequest(
             password: String,
         ): MemberCreateRequest =
             MemberCreateRequest(
-                Email(email),
-                Nickname(nickname),
-                PasswordHash(password),
+                email,
+                nickname,
+                password,
             )
     }
 }
